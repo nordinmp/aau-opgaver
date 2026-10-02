@@ -20,7 +20,7 @@ housing.hist(bins=50, figsize=(20,15))
 plt.show()
  """
 
-housing = pd.read_csv("housing.csv")
+housing = pd.read_csv("datasets\housing.csv")
 # Opret rooms_cat på hele DataFrame før split
 housing["rooms_cat"] = pd.cut(housing["total_rooms"], bins=[0., 5000, 10000, np.inf], labels=[0, 1, 2])
 test_size = 0.2
