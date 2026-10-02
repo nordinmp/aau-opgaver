@@ -18,7 +18,6 @@ while run_flag is True:
     rm = time.localtime()
 
 
-
     hour_degree = (rm.tm_hour) * 30 - 90
     minute_degree = rm.tm_min * 6 - 90
     second_degree = rm.tm_sec * 6 - 90
