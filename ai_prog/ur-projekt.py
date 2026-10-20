@@ -15,12 +15,12 @@ while run_flag is True:
         if event.type == pygame.QUIT:
             run_flag = False
 
-    rm = time.localtime()
+    rn = time.localtime()
 
 
-    hour_degree = (rm.tm_hour) * 30 - 90
-    minute_degree = rm.tm_min * 6 - 90
-    second_degree = rm.tm_sec * 6 - 90
+    hour_degree = (rn.tm_hour) * 30 - 90
+    minute_degree = rn.tm_min * 6 - 90
+    second_degree = rn.tm_sec * 6 - 90
 
     screen.fill((255, 255, 255)) # Fill the screen with white
 

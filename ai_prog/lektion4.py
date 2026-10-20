@@ -28,6 +28,7 @@ new_list = []
 
 run_flag = True
 while run_flag is True:
+    screen.fill((255, 255, 255)) # Fill the screen with white
 
     
     # Opgave 2
@@ -39,11 +40,11 @@ while run_flag is True:
     pygame.draw.line(screen, (0,0,0,), start_pos, (x_end, y_end), 2) """
 
     # Opgave 4
-    """ 
+    
     dir += spd
     y = start_pos[1] - amplitude * math.sin(dir)
     
-    pygame.draw.circle(screen, (0,0,0), (x,y), 5) """
+    pygame.draw.circle(screen, (0,0,0), (x,y), 5) 
 
     # Opgave 5 og 6
     """pressed = pygame.mouse.get_pressed()
