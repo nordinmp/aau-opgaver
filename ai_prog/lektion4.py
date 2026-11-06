@@ -28,7 +28,7 @@ new_list = []
 
 run_flag = True
 while run_flag is True:
-    screen.fill((255, 255, 255)) # Fill the screen with white
+    #screen.fill((255, 255, 255)) # Fill the screen with white
 
     
     # Opgave 2
@@ -41,13 +41,13 @@ while run_flag is True:
 
     # Opgave 4
     
-    dir += spd
+    """dir += spd
     y = start_pos[1] - amplitude * math.sin(dir)
     
-    pygame.draw.circle(screen, (0,0,0), (x,y), 5) 
+    pygame.draw.circle(screen, (0,0,0), (x,y), 5)  """
 
     # Opgave 5 og 6
-    """pressed = pygame.mouse.get_pressed()
+    pressed = pygame.mouse.get_pressed()
 
     if pressed[0] == True:
         pos = pygame.mouse.get_pos()
@@ -65,7 +65,7 @@ while run_flag is True:
         elif 320 < x < 640 and 240 < y < 480:
             color = "black"
 
-        pygame.draw.circle(screen, color, pos, 5) """
+        pygame.draw.circle(screen, color, pos, 5)
 
     # Opgave 7
     """pressed = pygame.mouse.get_pressed()
@@ -108,7 +108,7 @@ while run_flag is True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_flag = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    """         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             pos = event.pos
 
             if start_pos_2 == ():
@@ -126,9 +126,9 @@ while run_flag is True:
                 if first_pos != pos:
                     start_pos_2 = ()
                     first_pos = ()
-                    print("Reset")
+                    print("Reset") 
 
-            print(start_pos_2, first_pos)
+            print(start_pos_2, first_pos)"""
 
     pygame.display.flip() # Refresh the screen so drawing appears
     clock.tick(60)
