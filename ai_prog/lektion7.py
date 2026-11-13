@@ -55,9 +55,46 @@ def main():
 
     grid = draw_grid(48, 64)
 
-    grid = grid_line(grid, (0, 0), (0, 3))
+    grid = grid_line(grid, (0, 0), (0, 47))
+    grid = grid_line(grid, (63, 0), (63, 47))
+    grid = grid_line(grid, (2, 0), (63, 0))
+    grid = grid_line(grid, (0, 47), (61, 47))
 
+    grid = grid_line(grid, (1, 7), (57, 7))
+    grid = grid_line(grid, (6, 15), (62, 15))
+    grid = grid_line(grid, (1, 23), (57, 23))
+    grid = grid_line(grid, (6, 31), (62, 31))
+    grid = grid_line(grid, (1, 39), (57, 39))
 
+    grid = grid_line(grid, (10, 1), (10, 5))
+    grid = grid_line(grid, (22, 2), (22, 6))
+    grid = grid_line(grid, (35, 1), (35, 4))
+    grid = grid_line(grid, (48, 3), (48, 6))
+
+    grid = grid_line(grid, (14, 8), (14, 12))
+    grid = grid_line(grid, (28, 10), (28, 14))
+    grid = grid_line(grid, (43, 8), (43, 12))
+    grid = grid_line(grid, (55, 10), (55, 14))
+
+    grid = grid_line(grid, (9, 17), (9, 22))
+    grid = grid_line(grid, (23, 16), (23, 20))
+    grid = grid_line(grid, (38, 18), (38, 22))
+    grid = grid_line(grid, (51, 16), (51, 20))
+
+    grid = grid_line(grid, (16, 24), (16, 29))
+    grid = grid_line(grid, (31, 26), (31, 30))
+    grid = grid_line(grid, (46, 24), (46, 28))
+    grid = grid_line(grid, (57, 27), (57, 30))
+
+    grid = grid_line(grid, (11, 33), (11, 38))
+    grid = grid_line(grid, (26, 32), (26, 36))
+    grid = grid_line(grid, (40, 34), (40, 38))
+    grid = grid_line(grid, (53, 32), (53, 36))
+
+    grid = grid_line(grid, (8, 41), (8, 45))
+    grid = grid_line(grid, (20, 42), (20, 46))
+    grid = grid_line(grid, (34, 40), (34, 44))
+    grid = grid_line(grid, (47, 42), (47, 46))
 
     draw_grid_on_screen(screen, grid)
 
