@@ -1,7 +1,7 @@
 import random
-from tracemalloc import start
 
 from matplotlib.cm import terrain
+
 import pygame
 
 

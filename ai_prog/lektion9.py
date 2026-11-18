@@ -62,12 +62,12 @@ def draw_grid_on_screen(screen, grid):
     rows = len(grid)
     columns = len(grid[0])
 
-    for x in range(rows):
-        for y in range(columns):
-            if grid[x][y] == "1":
-                pygame.draw.rect(screen, (0, 0, 0), (y * 10, x * 10, 10, 10))
+    for y in range(rows):
+        for x in range(columns):
+            if grid[y][x] == "1":
+                pygame.draw.rect(screen, (0, 0, 0), (x * 10, y * 10, 10, 10))
             else:
-                pygame.draw.rect(screen, (255, 255, 255), (y * 10, x * 10, 10, 10))
+                pygame.draw.rect(screen, (255, 255, 255), (x * 10, y * 10, 10, 10))
 
 
 

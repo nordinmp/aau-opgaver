@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: aau-ai",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "python": "C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\python.exe",
+            "env": {
+                "PATH": "C:\\Users\\nordi\\miniconda3\\envs\\aau-ai;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Library\\mingw-w64\\bin;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Library\\usr\\bin;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Library\\bin;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Scripts;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\bin;${env:PATH}"
+            }
+        }
+    ]
+}

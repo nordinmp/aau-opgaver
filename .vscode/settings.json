@@ -1,6 +1,10 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python.terminal.activateEnvironment": true,
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Library\\bin;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai\\Scripts;C:\\Users\\nordi\\miniconda3\\envs\\aau-ai;${env:PATH}"
+    },
     "python.testing.pytestArgs": [
         "ai_prog"
     ],
@@ -12,5 +16,6 @@
         "./ai_prog",
         "-p",
         "test_*.py"
-    ]
+    ],
+    "python.terminal.useEnvFile": true
 }
