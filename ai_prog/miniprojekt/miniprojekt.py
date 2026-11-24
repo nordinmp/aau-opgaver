@@ -1,84 +1,119 @@
 import random
+from turtle import width
 
-from matplotlib.cm import terrain
-
+from matplotlib.pylab import ndarray
 import pygame
 
+class City:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def generateCity(self):
+        """Create a map of size width x height."""
+
+        self.cityMap = []
+
+        for y in range(self.height):
+            row = []
+            for x in range(self.width):
+                row.append(".")
+            self.cityMap.append(row)
+
+        # Place a starting intersection in the upper third of the map
+        currX = self.width // 3 
+        currY = self.height // 3
+        self.cityMap[currY][currX] = '+'
+
+        # Generate roads in all directions
+        self.newRoad((currX,currY),'u')
+        self.newRoad((currX,currY),'d')
+        self.newRoad((currX,currY),'l')
+        self.newRoad((currX,currY),'r')
 
 
-class TerrainType:
-    def __init__(self, name, grid, color = (0, 255, 0)):
-        self.name = name
-        self.color = color
-        self.grid = grid
-    
-    def generate_grid(self):
-        row = []
-        for x in range(self.grid[1]):
-            column = []
+        return self.cityMap
 
-            for y in range(self.grid[0]):
+    def newRoad(self,currentPosition, direction):
+
+        print("New road at: ", currentPosition, " in direction: ", direction)
+
+        """Creates a new road in direction. Direction can be 'u','d','l','r'."""
+        if direction == 'u':
+            vector = (0,-1)
+            directionChar = '|'
+        elif direction == 'd':
+            vector = (0,1)
+            directionChar = '|'
+        elif direction == 'l':
+            vector = (-1,0)
+            directionChar = '-'
+        else:
+            vector = (1,0)
+            directionChar = '-'
+
+        # Originally, this was intended as a random road length. However, this created
+        # unpredictable results. Therefore, we changed to a constant.
+        randRoad = 5
+
+
+        for index in range(1,randRoad):
+            currX = index*vector[0] + currentPosition[0]
+            currY = index*vector[1] + currentPosition[1]
+
+            # If we are outside the width of the map, simply return
+            if currX >= self.width or currX <0 or currY >= self.height or currY <0:
+                return
+
+            if self.cityMap[currY][currX] == '.':
+                self.cityMap[currY][currX] = directionChar
             
-                column.append("0")
-            row.append(column)
-        return row
+        # Move to the next spot
+        currX = currentPosition[0]+vector[0]*(randRoad)
+        currY = currentPosition[1]+vector[1]*(randRoad)
+        if currX >= self.width or currX <0 or currY >= self.height or currY <0:
+                return
 
-    def draw_path(self, grid, path):
-        new_grid = []
-        for row in grid:
-            new_grid.append(row.copy())
+        # Call newIntersection to determine whether we should create a new intersection or not.
+        if self.cityMap[currY][currX] == '.':
+            self.newIntersection((currX,currY),direction)
 
-        for coord in path:
-            x, y = coord
-            new_grid[y][x] = "3"
+    def newIntersection(self,currentPosition,direction):
+        """This function decides whether to create a new intersection, straight road, or stop."""
 
-        return new_grid
+        print("New intersection at: ", currentPosition, " in direction: ", direction)
 
+        prob = random.randint(0,10)
 
-    def draw_terrain(self, coord, radius, grid, terrain_type):
-        x, y = coord
+        currX = currentPosition[0]
+        currY = currentPosition[1]
 
-        if terrain_type == "water":
-            terrain_value = "2"
-        if terrain_type == "mountain":
-            terrain_value = "1"
+        # 30% probability of a new intersection, 40% probabiloity of a straight road, 30% probability that the road just ends
+        if prob < 6:
+            # New intersection
+            self.cityMap[currY][currX] = '+'
 
+            # start a road in every direction except where we came from
+            if (direction != 'u'):
+                self.newRoad((currX,currY),'u')
+            if (direction != 'd'):
+                self.newRoad((currX,currY),'d')
+            if (direction != 'l'):
+                self.newRoad((currX,currY),'l')
+            if (direction != 'r'):
+                self.newRoad((currX,currY),'r')
+        elif prob > 8:
+            # Keep going
+            if direction == 'u' or direction == 'd':
+                self.cityMap[currentPosition[1]][currentPosition[0]] = '|'
+            else:
+                self.cityMap[currentPosition[1]][currentPosition[0]] = '-'
 
-        # copy grid, for new grid that can be manipulated
-        new_grid = []
-        for row in grid:
-            new_grid.append(row.copy())
+            self.newRoad((currX,currY),direction)
+        else:
+            # else - blank - stop
+            self.cityMap[currentPosition[1]][currentPosition[0]] = 'b'
 
-        # if x,y are not between 0 and the length of grid, return
-        if not (0 <= y < len(new_grid) and 0 <= x < len(new_grid[0])):
-            return new_grid
-
-
-        # find the areas within the radius and mark them as water, by generating points around the center
-        for row in range(max(0, y - radius), min(len(new_grid), y + radius + 1)):
-            for column in range(max(0, x - radius), min(len(new_grid[0]), x + radius + 1)):
-
-                # function for circle, to check if point is in radius
-                if (x - column) ** 2 + (y - row) ** 2 <= radius ** 2:
-                    # if in circle draw as water
-                    new_grid[row][column] = terrain_value
-
-        return new_grid
-
-    def draw_grid_on_screen(self, screen, grid):
-        rows = len(grid)
-        columns = len(grid[0])
-
-        for x in range(rows):
-            for y in range(columns):
-                if grid[x][y] == "0":
-                    pygame.draw.rect(screen, (0,255,0), (y * 10, x * 10, 10, 10))
-                elif grid[x][y] == "1":
-                    pygame.draw.rect(screen, (139, 69, 19), (y * 10, x * 10, 10, 10))
-                elif grid[x][y] == "2":
-                    pygame.draw.rect(screen, (0,0,255), (y * 10, x * 10, 10, 10))
-                elif grid[x][y] == "3":
-                    pygame.draw.rect(screen, (255,255,0), (y * 10, x * 10, 10, 10))
 
 class Point:
     def __init__(self, coord, color):
@@ -115,99 +150,101 @@ class Pathfinding:
         # return the cost for each terrain type
         x, y = position
         costs = {
-            "0": 1,  # Grass
-            "2": 2,  # Water
-            "1": 3,  # Mountain
-            "3": 1,  # Path
+            ".": 10,
+            "1": 3,
+            "-": 1,
+            "|": 1,
+            "+": 1,
+            "b": 1,
         }
         return costs[grid[y][x]]
+    
 
     def _heuristic(self, a, b):
         # Manhattan distance on a square grid
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     def pathfinding(self, grid, start, end):
-        # positiion and the cost to reach it from the start
-        frontier = [(start, 0)]
+        if not grid or not grid[0]:
+            return []
 
-        # remeber the path
-        came_from = {}
-        came_from[start] = None
+        width = len(grid[0])
+        height = len(grid)
+        start = tuple(start)
+        end = tuple(end)
 
-        # remeber the cost to reach each pos
-        cost_so_far = {}
-        cost_so_far[start] = 0
+        def is_inside(position):
+            x, y = position
+            return 0 <= x < width and 0 <= y < height
+
+        if not is_inside(start) or not is_inside(end):
+            return []
+
+        frontier = []
+        frontier.append([self._heuristic(start, end), 0, start])
+        came_from = {start: None}
+        cost_so_far = {start: 0}
 
         while frontier:
-            # sort so that the cheapest poisition comes first, then remove
-            frontier.sort(key=lambda item: item[1])
-            current, current_cost = frontier.pop(0)
+            frontier.sort(key=lambda item: item[0])
+            best = frontier.pop(0)
+            current_cost = best[1]
+            current = best[2]
 
-            # if current reached the end, break the loop
             if current == end:
                 break
 
-            for next in self._get_neighbors(grid, current):
-                # calculate the cost of moving through different terrain types
-                new_cost = cost_so_far[current] + self._terrain_cost(grid, next)
+            if current_cost != cost_so_far[current]:
+                continue
 
-                # if the new cost is lower than the previous cost, update it
+            for next_position in self._get_neighbors(grid, current):
+                new_cost = current_cost + self._terrain_cost(grid, next_position)
 
-                # if the new calculated cost is lower than the current cost, update the cost
-                if next not in cost_so_far or new_cost < cost_so_far[next]:
-                    cost_so_far[next] = new_cost
-                    # calculate the priotiy for the next posisiton using manhatten distance heuristic
-                    priority = new_cost + self._heuristic(next, end)
-                    frontier.append((next, priority))
-                    # save how this position was reached for path reconstruction
-                    came_from[next] = current
+                if next_position not in cost_so_far or new_cost < cost_so_far[next_position]:
+                    cost_so_far[next_position] = new_cost
+                    priority = new_cost + self._heuristic(next_position, end)
+                    frontier.append([priority, new_cost, next_position])
+                    came_from[next_position] = current
+
+        if end not in came_from:
+            return []
 
         path = []
-
-        # go from end to start, following the came_from to get shortest path
         current = end
         while current is not None:
             path.append(current)
             current = came_from[current]
 
-        # return reversed path
         return path[::-1]
 
 
-def draw_everything(screen, terrain, grid, startpoint, endpoint, pathfinder):
+def draw_everything(screen, startpoint, endpoint, city_map=None, pathfinder=None):
+    """Draw everything on the screen."""
+    path = []
+    if city_map is not None and pathfinder is not None:
+        path = pathfinder.pathfinding(
+            city_map,
+            (startpoint.x, startpoint.y),
+            (endpoint.x, endpoint.y),
+        )
 
-    path = pathfinder.pathfinding(
-        grid,
-        (startpoint.x, startpoint.y),
-        (endpoint.x, endpoint.y),
-    )
+    if city_map is not None:
+        for y, row in enumerate(city_map):
+            for x, road in enumerate(row):
+                if road == ".":
+                    pygame.draw.rect(screen, (0, 255, 0), (x * 10, y * 10, 10, 10))
+                elif road == "-":
+                    pygame.draw.rect(screen, (139, 69, 19), (x * 10, y * 10, 10, 10))
+                elif road == "|":
+                    pygame.draw.rect(screen, (0, 0, 255), (x * 10, y * 10, 10, 10))
+                elif road in ("+", "b"):
+                    pygame.draw.rect(screen, (255, 255, 0), (x * 10, y * 10, 10, 10))
 
+    for x, y in path:
+        pygame.draw.rect(screen, (255, 255, 255), (x * 10, y * 10, 10, 10))
 
-    terrain.draw_grid_on_screen(screen, grid) # draw grid
-    terrain.draw_path(grid, path) # draw path
-    terrain.draw_grid_on_screen(screen, terrain.draw_path(grid, path)) # add path to grid
     startpoint.draw(screen) # draw startpoint
     endpoint.draw(screen) # draw endpoint
-
-
-def place_terrain(terrain, grid):
-    # draw random water areas on the grid
-    for i in range(random.randint(15, 35)):
-        x = random.randint(0, terrain.grid[0] - 1)
-        y = random.randint(0, terrain.grid[1] - 1)
-        radius = random.randint(1, 10)
-
-        grid = terrain.draw_terrain((x, y), radius, grid, "water")
-
-    # draw random mountain areas on the grid
-    for i in range(random.randint(4,8)):
-        x = random.randint(0, terrain.grid[0] - 1)
-        y = random.randint(0, terrain.grid[1] - 1)
-        radius = random.randint(10, 15)
-
-        grid = terrain.draw_terrain((x, y), radius, grid, "mountain")
-
-    return grid
 
 
 def main():
@@ -217,19 +254,21 @@ def main():
 
     screen = pygame.display.set_mode(screen_size)
 
-    terrain = TerrainType("grass", (screen_size[0]//10, screen_size[1]//10), (0, 255, 0))
 
-    pathfinder = Pathfinding(terrain.grid)
+    grid_size = (screen_size[0] // 10, screen_size[1] // 10)
 
-    grid = terrain.generate_grid()
+    city = City(grid_size[0], grid_size[1])
+    city_map = city.generateCity()
 
-    grid = place_terrain(terrain, grid)
+    print(city_map)
+
+    pathfinder = Pathfinding(city_map)
 
     startpoint = Point((10, 45), (0, 255, 255))
     endpoint = Point((45, 20), (255, 0, 0))
 
 
-    draw_everything(screen, terrain, grid, startpoint, endpoint, pathfinder)
+    draw_everything(screen, startpoint, endpoint, city_map, pathfinder)
 
     run_flag = True
 
@@ -266,17 +305,16 @@ def main():
                 # update pos of the dragged point
                 dragging.update_position((grid_x, grid_y))
 
-                draw_everything(screen, terrain, grid, startpoint, endpoint, pathfinder)
+                draw_everything(screen, startpoint, endpoint, city_map, pathfinder)
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     # regenerate grid
-                    grid = terrain.generate_grid()
-
-                    grid = place_terrain(terrain, grid)
+                    city_map = city.generateCity()
 
                     # recalc path
-                    draw_everything(screen, terrain, grid, startpoint, endpoint, pathfinder)
+                    draw_everything(screen, startpoint, endpoint, city_map, pathfinder)
+                    
 
         pygame.display.flip() # Refresh the screen so drawing appears
 

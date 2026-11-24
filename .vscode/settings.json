@@ -13,6 +13,8 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
+        "-k",
+        "not slow",
         "./ai_prog",
         "-p",
         "test_*.py"
